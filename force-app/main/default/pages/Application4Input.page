@@ -411,7 +411,10 @@
                                     <div>
                                         <button type="button" id="srchAppAddrBtn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('applicantZip', 'applicantAddress')">
                                             <apex:outputText value="住所を検索" />
-                                        </button>
+                                        </button> -->
+                                        <!-- <button type="button" id="srchAppAddrBtn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('applicantZip', 'applicantAddress')">
+                                            <apex:outputText value="住所を検索" />
+                                        </button> -->
                                     </div>
                                 </div>
                             </div>
@@ -1236,34 +1239,84 @@
         /**
         * 郵便番号で住所マスタから住所を取得する
         */
-        function getAddressByPostCode(postcodeFieldId, addressFieldId) {
+        // function getAddressByPostCode(postcodeFieldId, addressFieldId) {
             
-            let postcode = $('input[id$="' + postcodeFieldId + '"]').val();
-            if (postcode) {
-                // 半角数字7桁(ハイフン無し)の場合、住所を検索する
-                if (postcode.match(/[0-9]{7}/)) {
-                    Visualforce.remoting.Manager.invokeAction(
-                        '{!$RemoteAction.ApplicationStage4Controller.getAddress}',
-                        $('input[id$="' + postcodeFieldId + '"]').val(), 
-                        function(result, event){
-                            if (event.status) {
-                                if (!result) {
-                                    alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
-                                }
-                                $('textarea[id$="' + addressFieldId + '"]').val(result);
-                            } else {
-                                // 何もしない
-                            }
-                        }, 
-                        {escape: true}
-                    );
-                    // 半角数字7桁(ハイフン無し)以外の場合
-                } else {
+        //     let postcode = $('input[id$="' + postcodeFieldId + '"]').val();
+        //     if (postcode) {
+        //         // 半角数字7桁(ハイフン無し)の場合、住所を検索する
+        //         if (postcode.match(/[0-9]{7}/)) {
+        //             Visualforce.remoting.Manager.invokeAction(
+        //                 '{!$RemoteAction.ApplicationStage4Controller.getAddress}',
+        //                 $('input[id$="' + postcodeFieldId + '"]').val(), 
+        //                 function(result, event){
+        //                     if (event.status) {
+        //                         if (!result) {
+        //                             alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
+        //                         }
+        //                         $('textarea[id$="' + addressFieldId + '"]').val(result);
+        //                     } else {
+        //                         // 何もしない
+        //                     }
+        //                 }, 
+        //                 {escape: true}
+        //             );
+        //             // 半角数字7桁(ハイフン無し)以外の場合
+        //         } else {
 
+        //         }
+        //     }
+            
+        // }
+
+        /**
+        *郵便番号からYOLP APIで住所を検索し取得する
+        * Copyright (c) 2012, Yahoo Japan Corporation.  All rights reserved.
+        * Copyrights licensed under the MIT License.
+        * See the accompanying LICENSE file for terms.
+        */
+
+        // 郵便番号検索
+        function getAddressByPostCode(postcodeFieldId, addressFieldId) {
+            let postcode = $('input[id$="' + postcodeFieldId + '"]').val();
+            // 郵便番号検索(YOLP API)
+            var url = 'https://map.yahooapis.jp/search/zip/V1/zipCodeSearch?';
+            // var zip_code = $('#zip').val().slice(0, 3) + '-' + $('#zip').val().slice(-4);
+            console.log(postcode);
+            var param = {
+                appid: 'dj00aiZpPXNjUE9GQWczN3o4aCZzPWNvbnN1bWVyc2VjcmV0Jng9NzU-',
+                output: 'json',
+                query: postcode,
+                results: 100 // 郵便番号検索結果の件数を指定
+            };
+            $.ajax({
+                url: url,
+                data: param,
+                dataType: 'jsonp',
+                success: function (results) {
+                    dispZipList(results);
+                    console.log(results);
+                },
+                error: function () {
+                    // エラー時の処理
+                }
+            });
+        }
+
+        // 郵便番号をリスト表示
+        function dispZipList(ydf) {
+            var zipList = $('#ziplist');
+            zipList.empty();
+
+            if (ydf.ResultInfo.Count < 1) {
+                zipList.alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
+            } else {
+                for (var i = 0; i < ydf.ResultInfo.Count; i++) {
+                    $('textarea[id$="' + ydf.Feature[i].Property.Address + '"]').val(result);
                 }
             }
-            
+
         }
+
         
         function doCheckDate(y, m, d) {
             y = y.substring(0, 4);
