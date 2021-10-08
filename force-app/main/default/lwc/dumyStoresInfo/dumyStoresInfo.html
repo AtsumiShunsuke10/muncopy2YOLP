@@ -1,0 +1,20 @@
+<template>
+    <div>
+        <lightning-button label="item2" onclick={changetab}>
+        </lightning-button>
+        <div>
+            <lightning-tabset variant="scoped" active-tab-value={activeTabValue}>
+                <template for:each={storeInfos} for:item="showingStoreInfo">
+                    <lightning-tab key={showingStoreInfo.StoreIndex__c} label={showingStoreInfo.StoreIndex__c} value={showingStoreInfo.StoreIndex__c}>
+                        <lightning-record-edit-form object-api-name="Store__c" record-id={showingStoreInfo.Id} data-id={showingStoreInfo.Id}>
+                            <lightning-input-field field-name="Id"></lightning-input-field>
+                            <lightning-input-field field-name="Application_Store_Name__c" onchange={handleOnChangeField}></lightning-input-field>
+                            <lightning-input-field field-name="Application_Store_Effort_DetailsA__c" onchange={handleOnChangeField}></lightning-input-field>
+                        </lightning-record-edit-form>
+                    </lightning-tab>
+                </template>
+            </lightning-tabset>
+            <lightning-button variant="brand" label="更新" onclick={updateStoreInfo} disabled={isDisabled}></lightning-button>
+        </div>
+    </div>
+</template>

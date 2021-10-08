@@ -1,0 +1,26 @@
+<template>
+    <template if:true={filesList}>
+        <div class={btn} style="text-align: right;">
+            <lightning-button variant="brand" label="別タブで表示" title="Primary action" onclick={navigateToVFPage} class="slds-m-left_x-small"></lightning-button>
+        </div>
+        <div class="slds-is-relative">
+            <template for:each={filesList} for:item="slide">
+                <div class={slide.cardClasses} key = {slide.slideIndex}>
+                    <div class="text-section">
+                        <h3 class = "slds-text-heading_medium">{slide.label}</h3>
+                    </div>
+                    <div class="slideNumbers">{slide.slideIndex}/{filesList.length}</div>
+                    <img src = {slide.url}/>
+                </div>
+            </template>
+            
+            <a class ="prev" onclick={backSilde}>&#10094;</a>
+            <a class ="next" onclick={forwardSilde}>&#10095;</a>
+        </div>
+        <!-- <div class="slds-text-align_center slds-p-around_medium">
+            <template for:each={filesList} for:item="slide">
+                <span class ={slide.dotClasses} data-id = {slide.slideIndex} key = {slide.slideIndex} onclick={currentSilde}></span>
+            </template>
+        </div> -->
+    </template>
+</template>

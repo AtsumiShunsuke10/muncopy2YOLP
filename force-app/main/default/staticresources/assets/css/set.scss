@@ -1,0 +1,81 @@
+@charset "utf-8";
+
+////////////////////
+//色
+////////////////////
+$color_main:#6781a0;//メインカラー
+$color_main2:#b265b6;//メインカラー明度違い
+@function color_bg($opcity:0.1) {////薄いメインカラー color_bg(透明度);
+	@return rgba(0,120,155,$opcity);
+}
+$color_sub:#b81c22;//サブカラー1　簡易申請
+$color_sub2:#1b449a;//サブカラー2　通常申請
+
+$color_sub3:#2861a0;
+$color_sub4:#ec6d20;
+@function color_bg_sub($opcity:0.2) {///薄いサブカラー
+	@return rgba(92,208,255,$opcity);
+}
+@function color_bg_gray($rgb:246) {////薄いグレー color_bg_gray(RGB値);
+	@return rgba($rgb,$rgb,$rgb,1);
+}
+
+
+@function color_bg_sub($opcity:1) {////サブカラー color_bg(透明度);
+	@return rgba(0,86,160,$opcity);
+}
+
+$color_bace:#2eaa62;//元祖からのポイントカラー
+$color_att:#d55d5d ;//注意カラー
+$color_att2:#d40000 ;//ビビッドな注意カラー
+
+////////////////////
+//コンテンツ
+////////////////////
+$max_width : 960px;
+$break_sp :768px; //スマホブレイクポイント
+
+////////////////////
+//フォント
+////////////////////
+//サイズ
+//PC
+$fz-default: 1.6rem;
+$fz-14:1.4rem;
+$fz-15:1.5rem;
+$fz-18:1.8rem;
+$fz-20:2.0rem;
+$fz-22:2.2rem;
+$fz-24:2.4rem;
+$fz-34:3.4rem;
+$fz-36:3.6rem;
+//sp
+$fz-default-sp: calc(#{$fz-default} * 0.875);
+$fz-14-sp:calc(#{$fz-14} * 0.875);
+$fz-15-sp:calc(#{$fz-15} * 0.875);
+$fz-18-sp:calc(#{$fz-18} * 0.875);
+$fz-20-sp:calc(#{$fz-20} * 0.775);
+$fz-22-sp:calc(#{$fz-22} * 0.775);
+$fz-24-sp:calc(#{$fz-24} * 0.75);
+$fz-34-sp:calc(#{$fz-34} * 0.65);
+$fz-36-sp:calc(#{$fz-36} * 0.65);
+
+//line-heigt
+$lh-default: 1.7;
+$lh-15:1.5;
+$lh-16:1.6;
+$lh-20:2.0;
+
+//letter-spacing
+$ls-01: 0.1em;
+$ls-02: 0.2em;
+$ls-0: 0em;
+
+
+////////////////////
+//SPのときのマージン倍率
+////////////////////
+$sp_rate :0.6;
+
+
+
