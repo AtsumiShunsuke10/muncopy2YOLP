@@ -412,15 +412,19 @@
                                         <button type="button" id="srchAppAddrBtn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('applicantZip', 'applicantAddress')">
                                             <apex:outputText value="住所を検索" />
                                         </button> -->
-                                        <!-- <button type="button" id="srchAppAddrBtn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('applicantZip', 'applicantAddress')">
+                                        <button type="button" id="srchAppAddrBtn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="zipSearch()">
                                             <apex:outputText value="住所を検索" />
-                                        </button> -->
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                             <div class="row infoDiv required autofill">
                                 <apex:outputLabel value="所在地又は住所（番地以降は入力してください。）" for="applicantAddress" />
                                 <apex:inputField styleClass="form-control" value="{!apply4.Applicant_Address__c}" id="applicantAddress" />
+                            </div>
+                            <div class="row infoDiv required autofill">
+                                <apex:outputLabel value="所在地又は住所（番地以降は入力してください。）" for="applicantAddress" />
+                                <apex:inputField styleClass="form-control"  id="zipList" />
                             </div>
                             <div class="row infoDiv required autofill">
                                 <apex:outputLabel value="法人の名称又は氏名" for="applicantBusinessName" />
@@ -1239,34 +1243,34 @@
         /**
         * 郵便番号で住所マスタから住所を取得する
         */
-        // function getAddressByPostCode(postcodeFieldId, addressFieldId) {
+        function getAddressByPostCode(postcodeFieldId, addressFieldId) {
             
-        //     let postcode = $('input[id$="' + postcodeFieldId + '"]').val();
-        //     if (postcode) {
-        //         // 半角数字7桁(ハイフン無し)の場合、住所を検索する
-        //         if (postcode.match(/[0-9]{7}/)) {
-        //             Visualforce.remoting.Manager.invokeAction(
-        //                 '{!$RemoteAction.ApplicationStage4Controller.getAddress}',
-        //                 $('input[id$="' + postcodeFieldId + '"]').val(), 
-        //                 function(result, event){
-        //                     if (event.status) {
-        //                         if (!result) {
-        //                             alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
-        //                         }
-        //                         $('textarea[id$="' + addressFieldId + '"]').val(result);
-        //                     } else {
-        //                         // 何もしない
-        //                     }
-        //                 }, 
-        //                 {escape: true}
-        //             );
-        //             // 半角数字7桁(ハイフン無し)以外の場合
-        //         } else {
+            let postcode = $('input[id$="' + postcodeFieldId + '"]').val();
+            if (postcode) {
+                // 半角数字7桁(ハイフン無し)の場合、住所を検索する
+                if (postcode.match(/[0-9]{7}/)) {
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.ApplicationStage4Controller.getAddress}',
+                        $('input[id$="' + postcodeFieldId + '"]').val(), 
+                        function(result, event){
+                            if (event.status) {
+                                if (!result) {
+                                    alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
+                                }
+                                $('textarea[id$="' + addressFieldId + '"]').val(result);
+                            } else {
+                                // 何もしない
+                            }
+                        }, 
+                        {escape: true}
+                    );
+                    // 半角数字7桁(ハイフン無し)以外の場合
+                } else {
 
-        //         }
-        //     }
+                }
+            }
             
-        // }
+        }
 
         /**
         *郵便番号からYOLP APIで住所を検索し取得する
@@ -1275,28 +1279,27 @@
         * See the accompanying LICENSE file for terms.
         */
 
-        // 郵便番号検索
-        function getAddressByPostCode(postcodeFieldId, addressFieldId) {
-            let postcode = $('input[id$="' + postcodeFieldId + '"]').val();
-            // 郵便番号検索(YOLP API)
+       // 郵便番号検索
+        function zipsearch() {
             var url = 'https://map.yahooapis.jp/search/zip/V1/zipCodeSearch?';
-            // var zip_code = $('#zip').val().slice(0, 3) + '-' + $('#zip').val().slice(-4);
-            console.log(postcode);
+            var zip_code = $('#zip').val().slice(0,3) + '-' + $('#zip').val().slice(-4);
+            console.log(zip_code);
             var param = {
                 appid: 'dj00aiZpPXNjUE9GQWczN3o4aCZzPWNvbnN1bWVyc2VjcmV0Jng9NzU-',
                 output: 'json',
-                query: postcode,
+                query: zip_code,
                 results: 100 // 郵便番号検索結果の件数を指定
+
             };
             $.ajax({
                 url: url,
                 data: param,
                 dataType: 'jsonp',
-                success: function (results) {
+                success: function(results) {
                     dispZipList(results);
                     console.log(results);
                 },
-                error: function () {
+                error: function() {
                     // エラー時の処理
                 }
             });
@@ -1306,23 +1309,26 @@
         function dispZipList(ydf) {
             var zipList = $('#ziplist');
             zipList.empty();
-
+        
             if (ydf.ResultInfo.Count < 1) {
-                zipList.alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
-            } else {
+                zipList.append('<option value="notFound">該当の郵便番号は見つかりませんでした。</option>');
+        
+            } else if(ydf.ResultInfo.Count == 1) {
+
+                zipList.append('<option value="">' + ydf.Feature[0].Property.Address + '</option>');
+        
+            } else
                 for (var i = 0; i < ydf.ResultInfo.Count; i++) {
-                    $('textarea[id$="' + ydf.Feature[i].Property.Address + '"]').val(result);
+                zipList.append('<option value="ydf.Feature[i].Property.Address">' + ydf.Feature[i].Property.Address + '</option>');
                 }
             }
-
         }
-
         
         function doCheckDate(y, m, d) {
             y = y.substring(0, 4);
             const date = new Date(y, m - 1, d);
             return y == date.getFullYear() && m == date.getMonth()+1 && d == date.getDate();
         }
-        </script>
-    </html>
+    </script>
+
 </apex:page>
