@@ -421,19 +421,22 @@
                             </div> -->
 
                             <div class="w-100 slds-scope row">
-                                <div class="w-30 my-box postcode-padding"><apex:inputField styleClass="form-control" value="{!apply4.Applicant_Postal_Code__c}" id="applicantZip"/></div>
+                                <div class="w-30 my-box postcode-padding">
+                                    <apex:inputField styleClass="form-control" value="{!apply4.Applicant_Postal_Code__c}" id="applicantZip" />
+                                </div>
                                 <div>
-                                    <apex:commandButton id="srchOffAddrBtn" StyleClass="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" action="{!getAddressByPostCode}" value="住所を検索"></apex:commandButton>
+                                    <apex:commandButton id="srchOffAddrBtn" StyleClass="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem"
+                                        action="{!getAddressByPostCode}" value="住所を検索"></apex:commandButton>
                                 </div>
                             </div>
-                        </div>
-                        <apex:selectList id="chooseColor" value="{!Address}" size="1">
-                            <apex:selectOptions value="{!AddressOptions}"/>
-                         </apex:selectList>
-                        <div class="row infoDiv required autofill">
-                            <apex:outputLabel value="所在地又は住所（番地以降は入力してください。）" for="applicantAddress" />
-                            <apex:inputField styleClass="form-control" value="{!apply4.Applicant_Address__c}" id="applicantAddress" />
-                        </div>
+                            </div>
+                            <apex:selectList id="chooseColor" value="{!Address}" size="1">
+                                <apex:selectOptions value="{!AddressOptions}" />
+                            </apex:selectList>
+                            <div class="row infoDiv required autofill">
+                                <apex:outputLabel value="所在地又は住所（番地以降は入力してください。）" for="applicantAddress" />
+                                <apex:inputField styleClass="form-control" value="{!apply4.Applicant_Address__c}" id="applicantAddress" />
+                            </div>
 
 
 
