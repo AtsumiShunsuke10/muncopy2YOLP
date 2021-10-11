@@ -425,7 +425,7 @@
                             </div>
                             <div class="row infoDiv required autofill">
                                 <apex:outputLabel value="所在地又は住所（番地以降は入力してください。）" for="applicantAddress" />
-                                <apex:inputField styleClass="form-control"  id="zipList" />
+                                <apex:inputField styleClass="form-control" value="{!ydf.Feature[i].Property.Address}"  id="zipList" />
                             </div>
                             <div class="row infoDiv required autofill">
                                 <apex:outputLabel value="法人の名称又は氏名" for="applicantBusinessName" />
