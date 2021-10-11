@@ -420,7 +420,6 @@
                                 <apex:inputField styleClass="form-control" value="{!apply4.Applicant_Address__c}" id="applicantAddress" />
                             </div> -->
 
-
                             <div class="w-100 slds-scope row">
                                 <div class="w-30 my-box postcode-padding"><apex:inputField styleClass="form-control" value="{!apply4.Applicant_Postal_Code__c}" id="applicantZip"/></div>
                                 <div>
