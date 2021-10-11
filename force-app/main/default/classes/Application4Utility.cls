@@ -509,7 +509,7 @@ public without sharing class Application4Utility {
      * 和暦日付への変換
      * 
      * @param String dateStr YYYY-MM-DD形の日付
-     * @param String type 0:和暦年月日 1:和暦年月
+     * @param String type 0:和暦年月日 1:和暦年月 2:和暦年
      * 
      * @return String 和暦日付
      */
@@ -532,7 +532,46 @@ public without sharing class Application4Utility {
         if(type==1){
             return warekiYear+warekiMonth;
         }
+        if(type==2){
+            return warekiYear;
+        }
         return warekiYear+warekiMonth+warekiDate;
+    }
+    
+    /**
+     * 「営業時間等短縮実施期間」選択オプションを作成
+     *
+     * @return List<SelectOption> 「営業時間等短縮実施期間」選択オプションのリスト
+     */
+    public static List<SelectOption> getSelectTsbDate(Date startDate, Date endDate){
+        List<SelectOption> options = new List<SelectOption>();
+        options.add(new SelectOption('',''));
+
+        Integer dueDays = startDate.daysBetween(endDate);
+        for (Integer i = 0; i <= dueDays; i++) {
+            Date d = startDate.addDays(i);
+            Datetime dt = Datetime.newInstance(d.year(), d.month(), d.day());
+            options.add(new SelectOption(String.valueOf(d), dt.format('M月d日')));
+        }
+        
+        return options;
+    }
+    
+    /**
+     * 指定フォーマットで日付をフォーマットする
+     * 
+     * @param Date dt 日付
+     * @param String formatStr 指定フォーマット
+     * @return String フォーマット日付文字列
+     */
+    public static String fmtDate(Date dt, String formatStr) {
+        
+        String fmtDt = '';
+        if (dt != null && String.isNotBlank(formatStr)) {
+            fmtDt = Datetime.newInstance(dt.year(), dt.month(), dt.day()).format(formatStr);
+        } 
+        return fmtDt;
+
     }
     
     /**

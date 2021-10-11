@@ -6,7 +6,7 @@
  *  作成者         : トランス・コスモス
  *  作成日         : 2021/09/01
  *******************************************************************************/
-trigger StoreTrigger on Store__c (before insert, before update, after update) {
+trigger StoreTrigger on Store__c (before insert, before update, after insert, after update) {
     
     if (Trigger.isBefore) {
         if (Trigger.isInsert) {
@@ -16,7 +16,11 @@ trigger StoreTrigger on Store__c (before insert, before update, after update) {
         }
         
     }else if (Trigger.isAfter) {
-        StoreHandler.doAfterUpdate(Trigger.new);
+        if (Trigger.isInsert) {
+            StoreHandler.doAfterInsert(Trigger.new, Trigger.oldMap);
+        } else if (Trigger.isUpdate) {
+            StoreHandler.doAfterUpdate(Trigger.new, Trigger.oldMap);
+        }
     }
     
 }

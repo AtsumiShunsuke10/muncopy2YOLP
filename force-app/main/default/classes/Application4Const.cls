@@ -36,6 +36,11 @@ public class Application4Const {
     public static final String CONST_APP4_APP_DIV_SOLE = '個人事業主';
     /** 申請（感染症拡大防止協力金：第3弾）オブジェクト　対象者区分　選択肢：法人 */
     public static final String CONST_APP4_APP_DIV_CORP = '法人';
+    
+    /** 申請（第16弾）オブジェクト　申請タイプ　値：電子 */
+    public static final String CONST_APP4_REP_FLG_ELECTRONIC = '電子';
+    /** 申請（第16弾）オブジェクト　申請タイプ　値：紙 */
+    public static final String CONST_APP4_REP_FLG_PAPER = '紙';
 
     /** 申請（感染症拡大防止協力金：第3弾）オブジェクト　要件審査結果　選択肢：審査OK */
     public static final String CONST_APP4_REQ_SCR_RET_OK = '審査OK';
@@ -71,6 +76,8 @@ public class Application4Const {
     /** 申請（感染症拡大防止協力金：第3弾）オブジェクト　時短営業終了日：2020/12/17 */
     //public static final Date CONST_APP4_SHORTER_BUSI_END_DATE = Date.newinstance(2020,12,18);
     public static final Date CONST_APP4_SHORTER_BUSI_END_DATE = Date.valueOf(System.Label.STORE_END_DATE);
+    /** 日付のフォーマット yyyy/MM/dd */
+    public static final String CONST_DATE_FMT = 'yyyy/MM/dd';
 
     /** 申請確認画面の時間短縮営業等実施期間の表示メッセージ */
     public static final String CONST_APP4_SHORTER_BUSI_PERIOD_MSG = '{0}　から　{1}まで（{2}日間）';

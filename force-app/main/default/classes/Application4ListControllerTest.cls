@@ -151,8 +151,8 @@ public class Application4ListControllerTest {
         ctrl.initChangeFilePage();
         ctrl.toChangeFile();
         Application4ListController.tempStr = ctrl.apply4.SessionRadom__c;
-        String saveToDocument = Application4ListController.saveToDocument('abc.xlsx','abc,def',ctrl.apply4.SessionRadom__c,'');
-        String deleteDocument = Application4ListController.deleteDocument('abc.xlsx',ctrl.apply4.SessionRadom__c,'');
+        String saveToDocument = Application4ListController.saveToDocument('abc.xlsx','abc,def',ctrl.apply4.SessionRadom__c);
+        String deleteDocument = Application4ListController.deleteDocument('abc.xlsx',ctrl.apply4.SessionRadom__c);
         ctrl.toCompletePage();
         ctrl.toListPage();
         ctrl.toInputPage();

@@ -14,12 +14,12 @@ const columns = [
 ];
 const sortFieldNameMap = {nameUrl: 'Title__c'};
 const displayLimitDataNum = 12;
-const displayLimitHeight = '381px';
+const displayLimitHeight = '396px';
 
-export default class informationDatatable extends LightningElement {
+export default class information extends LightningElement {
 
     wiredResult;
-    informations;
+    infomations;
     columns = columns;
     height = '';
     sortFieldNameMap = sortFieldNameMap;
@@ -30,12 +30,12 @@ export default class informationDatatable extends LightningElement {
         this.wiredResult = result;
         if(result.data) {
             let nameUrl;
-            this.informations = result.data.map(row => {
+            this.infomations = result.data.map(row => {
                 nameUrl = `/${row.Id}`;
                 return {...row, nameUrl}
             });
             this.cnt = 0;
-            this.informations.forEach(ele => {
+            this.infomations.forEach(ele => {
                 ele.format = ele.Importance__c === HIGH ? 'slds-theme_warning' : 'slds-text-color_default';
                 this.cnt++;
             });

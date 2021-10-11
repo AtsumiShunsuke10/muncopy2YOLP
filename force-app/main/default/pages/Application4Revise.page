@@ -1,3 +1,4 @@
+<!--Application4Revise-->
 <apex:page docType="html-5.0" Controller="Application4ListController" action="{!initRevisePage}" sidebar="false" standardStylesheets="false"
     showHeader="false" applyHtmlTag="false" applyBodyTag="false">
     <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -582,7 +583,7 @@
                             </div>
                         </h3>
                         <apex:repeat var="stores" value="{!storeList}" id="storeRepeat">
-                            <apex:outputPanel layout="block" id="store">
+                            <apex:outputPanel layout="block" rendered="{!storeReviceMap[stores.StoreIndex__c-1]}" id="store">
                                 <div class="card">
                                     <div class="card-header" id="No">
                                         <apex:outputText value="店舗{!stores.StoreIndex__c}" style="font-size:1.125rem;color:#adadad;font-style:italic;" />
@@ -596,11 +597,11 @@
                                         <div class="row infoDiv timeSavingBusiness required">
                                             <apex:outputLabel value="時間短縮営業等実施期間（{!startDateLbl}以降の時短営業をした初日を記入してください。）" for="timeSavingBusiness" />
                                             <div class="form-inline col-12 p-0" id="timeSavingBusiness">
-                                                <label class="pl-1 pr-2">{!startMonthLbl}</label>
-                                                <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="tsbStartDay" value="{!storeTsbStartDateMap[stores.StoreIndex__c-1].customDay}" onchange="calculateAmount(this)">
-                                                    <apex:selectOptions value="{!SelectTsbDay}"/>
+                                                <label class="pl-1 pr-2">{!storeTsbStartDateMap[stores.StoreIndex__c-1].customYear}</label>
+                                                <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="tsbStartDay" value="{!storeTsbStartDateMap[stores.StoreIndex__c-1].customDateStr}" onchange="calculateAmount(this)">
+                                                    <apex:selectOptions value="{!SelectTsbDate}"/>
                                                 </apex:selectList>
-                                                <label style="padding-right: .75rem">日　から</label>
+                                                <label style="padding-right: .75rem">　から</label>
                                                 <label for="tsbStartDay" class="pl-1 pr-2">{!endDateLbl}まで（<apex:outputText value="{!stores.Application_Store_Days__c}" id="tsbDaysDiff" />日間）</label>
                                             </div>
                                         </div>
@@ -708,7 +709,7 @@
                                             </thead>
                                             <tbody>
                                                 <apex:repeat var="stores" value="{!storeList}" id="amountRepeat">
-                                                    <tr>
+                                                    <tr style="{!IF(storeReviceMap[stores.StoreIndex__c-1],'','display: none')}">
                                                         <td scope="row">店舗{!stores.StoreIndex__c}</td>
                                                         <td class="text-right pr-sm-4">
                                                             <apex:outputField value="{! stores.Application_Store_Apply_Amount__c }" id="applyN" />&nbsp;円
@@ -761,6 +762,8 @@
                     $(element).children("div:not(.noRequired)").addClass("required");
                 }
             });
+            // 申請金額の合計を計算
+            calculateTotal();
         });
 
         $('.rentedBulding').find("input,textarea,select").on('change', function () {
@@ -794,6 +797,7 @@
             } else{
                 $(this).closest(".card-body").children("div:not(.noRequired)").addClass("required");
             }
+
         });
         
         function hankaku2Zenkaku(str) {
@@ -807,14 +811,41 @@
             // 申請内訳の金額設定
             // 該当店舗の申請金額設定
             var unitPricePerDay = parseInt('{!$Label.APPLICATION4_PAYMENT_UNIT_PRICE}');
-            var tsbEndDay = {!endDay};
+            var tsbEndDay = new Date("{!CONST_SHORTER_BUSI_END_DATE}");
+            const dayZone = '{!$Label.CONST_DAILY_ZONE_REQ}'.split(',');
+            const amountZone = '{!$Label.CONST_DAILY_AMOUNT_REQ}'.split(',');
             var id = $(_this).attr("id");
             var index = parseInt(id.split(":")[3]);
             var tsbStartDay = $(_this).val();
             var storeAmount = 0;
             if(tsbStartDay){
-                var tsbDaysDiff = tsbEndDay - parseInt(tsbStartDay) + 1;
-                storeAmount = unitPricePerDay * tsbDaysDiff;
+                if(dayZone.length+1 !=amountZone.length){
+                    var startDate = new Date(tsbStartDay.replace(/-/g, "/"));
+                    var endDate = tsbEndDay;
+                    var diff = endDate - startDate;
+                    tsbDaysDiff = diff /1000/60/60/24 + 1;
+                    storeAmount = unitPricePerDay * tsbDaysDiff;
+                }else{
+                    var startDate = new Date(tsbStartDay.replace(/-/g, "/"));
+                    var endDate = tsbEndDay;
+                    var diff = endDate - startDate;
+                    tsbDaysDiff = diff /1000/60/60/24 + 1;
+                    for (let i = 0; i < amountZone.length; i++) {
+                        
+                        if(i!=amountZone.length-1){
+                            endDate = new Date(dayZone[i].replace(/-/g, "/"));
+                        }else{
+                            endDate = tsbEndDay;
+                        }
+                        var subDiff = endDate - startDate;
+                        if(subDiff>=0){
+                            var daysDiff = subDiff /1000/60/60/24 + 1;
+                            storeAmount += amountZone[i] * daysDiff;
+                            startDate=new Date((endDate).valueOf() + 1000*60*60*24);
+                        }
+                    }
+                }
+                
                 $("span[id$='amountRepeat:" + index + ":applyN']").text(storeAmount.toLocaleString());
                 $("span[id$='storeRepeat:" + index + ":tsbDaysDiff']").text(tsbDaysDiff);
             } else {
@@ -823,20 +854,57 @@
             }
             
             // 申請金額の合計を計算
+            calculateTotal();
+
+        }
+
+        function calculateTotal(){
+            var unitPricePerDay = parseInt('{!$Label.APPLICATION4_PAYMENT_UNIT_PRICE}');
+            var tsbEndDay = new Date("{!CONST_SHORTER_BUSI_END_DATE}");
+            const dayZone = '{!$Label.CONST_DAILY_ZONE_REQ}'.split(',');
+            const amountZone = '{!$Label.CONST_DAILY_AMOUNT_REQ}'.split(',');
             var storeAmountSum = 0;
             for (var i = 0; i < '{!JSENCODE($Label.STORE_CNT)}'; i++) {
                 if ($("select[id$='storeRepeat:" + i + ":tsbStartDay']").val()) {
-                    tsbStartDay = parseInt($("select[id$='storeRepeat:" + i + ":tsbStartDay']").val());
-                    storeAmountSum += unitPricePerDay * (tsbEndDay - parseInt(tsbStartDay) + 1);
+                    var tsbStartDay=$("select[id$='storeRepeat:" + i + ":tsbStartDay']").val();
+                    
+                    if(dayZone.length+1 !=amountZone.length){
+                        var startDate = new Date(tsbStartDay.replace(/-/g, "/"));
+                        var endDate = tsbEndDay;
+                        var diff = endDate - startDate;
+                        tsbDaysDiff = diff /1000/60/60/24 + 1;
+                        storeAmount = unitPricePerDay * tsbDaysDiff;
+                    }else{
+                        var startDate = new Date(tsbStartDay.replace(/-/g, "/"));
+                        var endDate = tsbEndDay;
+                        var diff = endDate - startDate;
+                        tsbDaysDiff = diff /1000/60/60/24 + 1;
+                        for (let i = 0; i < amountZone.length; i++) {
+                            
+                            if(i!=amountZone.length-1){
+                                endDate = new Date(dayZone[i].replace(/-/g, "/"));
+                            }else{
+                                endDate = tsbEndDay;
+                            }
+                            var subDiff = endDate - startDate;
+                            if(subDiff>=0){
+                                var daysDiff = subDiff /1000/60/60/24 + 1;
+                                storeAmountSum += amountZone[i] * daysDiff;
+                                startDate=new Date((endDate).valueOf() + 1000*60*60*24);
+                            }
+                        }
+                    }
+                    
+                    //tsbStartDay = parseInt($("select[id$='storeRepeat:" + i + ":tsbStartDay']").val());
+                    //storeAmountSum += unitPricePerDay * (tsbEndDay - parseInt(tsbStartDay) + 1);
                 }
             }
             if (storeAmountSum != 0) {
                 $("span[id$='applySum']").text(storeAmountSum.toLocaleString());
                 $("span[id$='applyApplication']").text(storeAmountSum.toLocaleString());
             }
-
         }
-
+        
         function emptyCheck(){
             $('#submitBtn').prop('disabled','disabled');
             $('.fieldErrorMsg').remove();
@@ -844,7 +912,7 @@
             $('.hasFieldError').each(function(){
                 $(this).removeClass('hasFieldError');
             });
-            alert('emptyCheck');
+
             var errorMsgOnTop = "";
             var checkResult = true;
             var checkApplicantNumber = true;

@@ -419,7 +419,6 @@
                                 <apex:outputLabel value="所在地又は住所（番地以降は入力してください。）" for="applicantAddress" />
                                 <apex:inputField styleClass="form-control" value="{!apply4.Applicant_Address__c}" id="applicantAddress" />
                             </div>
-
                             <div class="row infoDiv required autofill">
                                 <apex:outputLabel value="法人の名称又は氏名" for="applicantBusinessName" />
                                 <apex:inputField styleClass="form-control" value="{!apply4.Applicant_Business_Name__c}" id="applicantBusinessName" />
@@ -616,7 +615,7 @@
                                             <div class="row infoDiv timeSavingBusiness">
                                                 <apex:outputLabel value="時間短縮営業等実施期間（{!startDateLbl}以降の時短営業をした初日を記入してください。）" for="timeSavingBusiness{!stores.StoreIndex__c}" />
                                                 <div class="form-inline col-12 p-0" id="timeSavingBusiness{!stores.StoreIndex__c}">
-                                                    <label class="pl-1 pr-2">{!startYearLbl}</label>
+                                                    <label class="pl-1 pr-2">{!startMonthLbl}</label>
                                                     <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="tsbStartDay" value="{!storeTsbStartDateMap[stores.StoreIndex__c].customDateStr}" onchange="calculateAmount(this)">
                                                         <apex:selectOptions value="{!SelectTsbDate}"/>
                                                     </apex:selectList>
@@ -1292,34 +1291,34 @@
         /**
         * 郵便番号で住所マスタから住所を取得する
         */
-        // function getAddressByPostCode(postcodeFieldId, addressFieldId) {
+        function getAddressByPostCode(postcodeFieldId, addressFieldId) {
             
-        //     let postcode = $('input[id$="' + postcodeFieldId + '"]').val();
-        //     if (postcode) {
-        //         // 半角数字7桁(ハイフン無し)の場合、住所を検索する
-        //         if (postcode.match(/[0-9]{7}/)) {
-        //             Visualforce.remoting.Manager.invokeAction(
-        //                 '{!$RemoteAction.ApplicationStage4Controller.getAddress}',
-        //                 $('input[id$="' + postcodeFieldId + '"]').val(), 
-        //                 function(result, event){
-        //                     if (event.status) {
-        //                         if (!result) {
-        //                             alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
-        //                         }
-        //                         $('textarea[id$="' + addressFieldId + '"]').val(result);
-        //                     } else {
-        //                         // 何もしない
-        //                     }
-        //                 }, 
-        //                 {escape: true}
-        //             );
-        //             // 半角数字7桁(ハイフン無し)以外の場合
-        //         } else {
+            let postcode = $('input[id$="' + postcodeFieldId + '"]').val();
+            if (postcode) {
+                // 半角数字7桁(ハイフン無し)の場合、住所を検索する
+                if (postcode.match(/[0-9]{7}/)) {
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.ApplicationStage4Controller.getAddress}',
+                        $('input[id$="' + postcodeFieldId + '"]').val(), 
+                        function(result, event){
+                            if (event.status) {
+                                if (!result) {
+                                    alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
+                                }
+                                $('textarea[id$="' + addressFieldId + '"]').val(result);
+                            } else {
+                                // 何もしない
+                            }
+                        }, 
+                        {escape: true}
+                    );
+                    // 半角数字7桁(ハイフン無し)以外の場合
+                } else {
 
-        //         }
-        //     }
+                }
+            }
             
-        // }
+        }
         
         function doCheckDate(y, m, d) {
             y = y.substring(0, 4);

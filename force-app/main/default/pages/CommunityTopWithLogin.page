@@ -78,14 +78,14 @@
                         <p><span class="red">※ 新規申請の受付は終了しました。</span></p>
                     </apex:outputPanel>
                 </div>
-                <apex:outputPanel layout="none" rendered="{!IF(today() <=date(2021,09,30) , true , false)}">
+                <apex:outputPanel layout="none" rendered="{!IF(today() <=date(2021,10,31) , true , false)}">
                     <div class="content0Div">
                         <a class="content1Link" href="{!$Site.CurrentSiteUrl}s/Application4List"  target="_self">
                             <img class="content1Img" src="{!$Resource.navi1}" />
                         </a>
                     </div>
                 </apex:outputPanel>
-                <apex:outputPanel layout="none" rendered="{!IF(today() > date(2021,09,30) , true , false)}">
+                <apex:outputPanel layout="none" rendered="{!IF(today() > date(2021,10,31) , true , false)}">
                     <div class="content0Div">
                         <a class="content1Link" href="#Dai3dan"  target="_self">
                             <img class="content1Img" src="{!$Resource.navi1}" />
@@ -111,7 +111,7 @@
             </div>
         </div>
         
-        <apex:outputPanel layout="none" rendered="{!IF(today() >date(2021,09,30) , true , false)}">
+        <apex:outputPanel layout="none" rendered="{!IF(today() >date(2021,10,31) , true , false)}">
             <div class="contentDai3danOverDiv" id="Dai3dan">
                 <p class="contentDai3danOverTitle">第3弾の受付は終了しました</p>
                 <p class="contentDai3danOverText">詳細は○○県HPを御確認ください</p>

@@ -72,6 +72,9 @@ global with sharing class Application4ListController {
     //店舗申請最大軒数
     Integer maxStore=Integer.valueOf(System.Label.STORE_CNT);
     
+    //時短営業終了日
+    public String CONST_SHORTER_BUSI_END_DATE      { get;set; }
+    
     public Application4ListController() {
         if(conId == null) conId = [select contactid from User where Id = :Userinfo.getUserId()].contactid;
         String conditionStr='';
@@ -79,6 +82,9 @@ global with sharing class Application4ListController {
             conditionStr='Contact__c=\'' + conId + '\' and Status__c!=\'' + Application4Const.CONST_APP4_STATUS_NOT_PROPOSED + '\'';
         }
         apply4List = Database.query(Application4Utility.getAllColumnSoql('Application4__c', conditionStr, 'Name desc', '1000'));
+        
+        //時短営業終了日
+        CONST_SHORTER_BUSI_END_DATE = Application4Utility.fmtDate(Application4Const.CONST_APP4_SHORTER_BUSI_END_DATE, Application4Const.CONST_DATE_FMT);
     }
 
     // 新規画面に遷移
@@ -294,6 +300,7 @@ global with sharing class Application4ListController {
                 cusDate.customYear = String.valueOf(stDate.year());
                 cusDate.customMonth = String.valueOf(stDate.month());
                 cusDate.customDay = String.valueOf(stDate.day());
+                cusDate.customDateStr = String.valueOf(stDate);
             } else {
                 cusDate.customYear = String.valueOf(Application4Const.CONST_APP4_SHORTER_BUSI_START_DATE.year());
                 cusDate.customMonth = String.valueOf(Application4Const.CONST_APP4_SHORTER_BUSI_START_DATE.month());
@@ -367,6 +374,13 @@ global with sharing class Application4ListController {
         return options;
     }
 
+    public List<SelectOption> getSelectTsbDate(){
+        Date sDate=Date.valueOf(System.Label.STORE_START_DATE);
+        Date eDate=Date.valueOf(System.Label.STORE_END_DATE);
+        
+        return Application4Utility.getSelectTsbDate(sDate,eDate);
+    }
+    
     // 「和暦年（yyyy年）」ような年分選択オプションを作成
     public List<SelectOption> getSelectWarekiYear() {
         List<SelectOption> options = new List<SelectOption>();
@@ -402,7 +416,7 @@ global with sharing class Application4ListController {
             if (s.Application_Store_Name__c!= null) {
                 s.Application_Store_Start_Date__c= 
                     Date.newInstance(Application4Const.CONST_APP4_SHORTER_BUSI_START_DATE.year(),
-                                     Application4Const.CONST_APP4_SHORTER_BUSI_START_DATE.month(),
+                                     Integer.valueOf(storeTsbStartDateMap.get(i-1).customMonth),
                                      Integer.valueOf(storeTsbStartDateMap.get(i-1).customDay));
                 s.Application_Store_End_Date__c=Application4Const.CONST_APP4_SHORTER_BUSI_END_DATE;
             }
@@ -472,7 +486,9 @@ global with sharing class Application4ListController {
     public void initChangeFilePage(){
         
         apply4 = Database.query(Application4Utility.getAllColumnSoql('Application4__c', applyId));
-
+        List<String> fieldsList = Application4Utility.getAllColumnsList('Store__c');
+        String query = Application4Utility.makeSoql(fieldsList, 'Store__c', 'Application4__c = \''+ apply4.Id +'\'', '', '', '');
+        storeList = Database.query(query);
         // 店舗の時間短縮営業等実施期間の表示メッセージを設定
         doFormatDaysMsg();
         // 個人事業主フラッグ
@@ -635,31 +651,6 @@ global with sharing class Application4ListController {
         
         return address;
         
-    }
-
-    public class CustomDate {
-        public String customYear    { get;set; }
-        public String customMonth   { get;set; }
-        public String customDay     { get;set; }
-        public String tsbDisplayMsg { get;set; }
-        public Date customDate {
-            get {
-                Date d;
-                try {
-                    d = Date.newInstance(Integer.valueOf(this.customYear.substring(0, 4)), Integer.valueOf(this.customMonth), Integer.valueOf(this.customDay));
-                } catch (Exception e) {
-                    return null;
-                }
-                return d;
-            }
-            private set;
-        }
-
-        public CustomDate() {
-            this.customYear = '';
-            this.customMonth = '';
-            this.customDay = '';
-        }        
     }
 
 }

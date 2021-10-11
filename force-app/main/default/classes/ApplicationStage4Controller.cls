@@ -25,7 +25,7 @@ global with sharing class ApplicationStage4Controller{
     public Id selectedApplicationId    { get;set; }
     // 申請番号
     public String application4Name { get;set; }
-
+    
     public String JSONString   { get;set; }
 
     // 生年月日
@@ -42,18 +42,26 @@ global with sharing class ApplicationStage4Controller{
     public String startMonthLbl { get;set; }
     public String endDateLbl { get;set; }
     public Integer endDay { get;set; }
-
+    
     private Id conId;
-
+    
     //店舗申請最大軒数
     Integer maxStore=Integer.valueOf(System.Label.STORE_CNT);
 
+    //SearchAddressByPostCode
+    public String PostCode {get;set;}
+    public String Address {get;set;}
+    public List<SelectOption> AddressOptions {get;set;}
+    
     public ApplicationStage4Controller(){
         if(conId == null) conId = [select contactid from User where Id = :Userinfo.getUserId()].contactid;
         //未提出申請者
         if(apply4 == null) {
             apply4 = new Application4__c(Contact__c=conId,SessionRadom__c=String.valueof((Math.random() * 10)));
         }
+
+        //SearchAddressByPostCode
+        AddressOptions = new List<SelectOption>();
     }
 
     private String getSelectSoqlString(String table, String cond, String options, boolean recordTypeFlg) {
@@ -86,7 +94,7 @@ global with sharing class ApplicationStage4Controller{
         Schema.DescribeSObjectResult r = s.getDescribe();
         return r.fields.getMap();
     }
-
+    
     public void initInputPage(){
 
         if(apply4.Status__c == Application4Const.CONST_APP4_STATUS_NOT_PROPOSED){
@@ -140,11 +148,11 @@ global with sharing class ApplicationStage4Controller{
             normalFlag=false;
             //本人確認書類:個人通常申請のみ表示
             kojinFlag = apply4.Applicant_Division__c == Application4Const.CONST_APP4_APP_DIV_SOLE;
-
+            
             if(apply4.id != null){
                 apply4 = Database.query(getSelectSoqlString('Application4__c', 'id=\''+apply4.id+'\'', '',true));
                 application4Name = apply4.Name;
-
+                
                 List<String> fieldsList = Application4Utility.getAllColumnsList('Store__c');
                 String query = Application4Utility.makeSoql(fieldsList, 'Store__c', 'Application4__c = \''+ apply4.Id +'\'', '', '', '');
                 storeList = Database.query(query);
@@ -193,11 +201,11 @@ global with sharing class ApplicationStage4Controller{
             infoMap.put('accountType',sobj.get('Finacial_Account_Type__c'));
             infoMap.put('accountNumber',sobj.get('Finacial_Account_Number__c'));
             infoMap.put('accountHolder',sobj.get('Account_Holder__c'));
-
+                
         }
         return JSON.serialize( infoMap );
     }
-
+    
     public List<SelectOption> getSelectYear(){
         List<SelectOption> options = new List<SelectOption>();
         options.add(new SelectOption('',''));
@@ -233,7 +241,7 @@ global with sharing class ApplicationStage4Controller{
         }
         return options;
     }
-
+    
     // 「和暦年（yyyy年）」ような年分選択オプションを作成
     public List<SelectOption> getSelectWarekiYear() {
         List<SelectOption> options = new List<SelectOption>();
@@ -255,17 +263,17 @@ global with sharing class ApplicationStage4Controller{
     }
 
     public List<SelectOption> getSelectApplication() {
-
+        
         List<SelectOption> options = new List<SelectOption>();
         options.add(new SelectOption('','--なし--'));
         options.add(new SelectOption(Application4Const.CONST_APP_SELECT_LIST_VALUE1, Application4Const.CONST_APP_SELECT_LIST_LABEL1));
         options.add(new SelectOption(Application4Const.CONST_APP_SELECT_LIST_VALUE2, Application4Const.CONST_APP_SELECT_LIST_LABEL2));
         return options;
-
+        
     }
-
+    
     public List<SelectOption> getSelectApplicationNum() {
-
+        
         List<SelectOption> options = new List<SelectOption>();
         List<SObject> sobjList = new List<SObject>();
         // 第1弾申請の場合
@@ -290,7 +298,7 @@ global with sharing class ApplicationStage4Controller{
     }
 
     public void toConfirmPage(){
-
+        
         // 代表者又は申請者の生年月日
         apply4.Applicant_Birthday__c = Date.valueOf(year+'-'+month+'-'+day);
         // ステータス
@@ -310,7 +318,7 @@ global with sharing class ApplicationStage4Controller{
         }*/
 
         Savepoint sp = Database.setSavepoint();
-
+      
         Database.UpsertResult sr = Database.upsert(apply4, false);
         if (!sr.isSuccess()) {
             for (Database.Error err : sr.getErrors()) {
@@ -319,7 +327,7 @@ global with sharing class ApplicationStage4Controller{
             Database.rollback(sp);
             return;
         }
-
+        
         // 店舗の時短営業開始日、時短営業終了日を設定
         List<store__c> insertStoreList= new List<store__c>();
         Integer storeCnt=0;
@@ -346,7 +354,7 @@ global with sharing class ApplicationStage4Controller{
                 s.Application_Store_End_Date__c=null;
             }*/
         }
-
+        
         List<Database.upsertResult> uResults = Database.upsert(insertStoreList, false);
         for(Database.upsertResult ur:uResults){
             if (!ur.isSuccess()) {
@@ -406,7 +414,7 @@ global with sharing class ApplicationStage4Controller{
             storeTsbStartDateMap.put(i, cusDate);
 
         }
-
+        
         startDateLbl=Application4Utility.changeWarekiYear(System.Label.STORE_START_DATE,0);
         startMonthLbl=Application4Utility.changeWarekiYear(System.Label.STORE_START_DATE,1);
         endDateLbl=Application4Utility.changeWarekiYear(System.Label.STORE_END_DATE,0);
@@ -491,7 +499,7 @@ global with sharing class ApplicationStage4Controller{
             return JSON.serialize( response );
        }
     }
-
+    
     public PageReference toCompletePage() {
 
         // ApplicatuionValueSet(selectedApplicationId);
@@ -504,11 +512,11 @@ global with sharing class ApplicationStage4Controller{
         RecordType retype=[Select id from  RecordType where DeveloperName='RecordType_readonly' and SobjectType='Application4__c'];
         apply4.RecordTypeId=retype.id;
         upsert apply4;
-
+        
         PageReference pr = new PageReference (page.Application4Complete.getUrl());
         pr.setRedirect(false);
         return pr;
-
+        
     }
     public PageReference toInputPage() {
         //前画面に戻る都選択された添付ファイルはクリアされます
@@ -534,7 +542,7 @@ global with sharing class ApplicationStage4Controller{
     // 申請番号にっよて、値の設定
     private void ApplicatuionValueSet(Id appid){
         if(appid != null) {
-
+            
             Sobject sobj = null;
             // 第1弾申請の場合
             if (selectedApplication == Application4Const.CONST_APP_SELECT_LIST_VALUE1) {
@@ -565,21 +573,54 @@ global with sharing class ApplicationStage4Controller{
 
     }
 
-    /**
-     * 郵便番号で住所を取得
-     *
-     * @param String postcode 郵便番号
-     * @return String 住所
-     */
-    @RemoteAction
-    public static String getAddress(String postcode) {
+    // /**
+    //  * 郵便番号で住所を取得
+    //  *
+    //  * @param String postcode 郵便番号
+    //  * @return String 住所
+    //  */
+    // @RemoteAction
+    // public static String getAddress(String postcode) {
+        
+    //     // 申請（感染症拡大防止協力金：第3弾）共通処理.郵便番号で住所マスタから住所を取得
+    //     String address = Application4Utility.getAddressByPostCode(postcode);
+        
+    //     return address;
+        
+    // }
 
-        // 申請（感染症拡大防止協力金：第3弾）共通処理.郵便番号で住所マスタから住所を取得
-        String address = Application4Utility.getAddressByPostCode(postcode);
+    public void getAddressByPostCode(){
+        String appid = 'dj00aiZpPXNjUE9GQWczN3o4aCZzPWNvbnN1bWVyc2VjcmV0Jng9NzU-';
+        String method = 'GET';
+        String formattedDateString = (Datetime.now()).format('EEE, dd MMM yyyy HH:mm:ss ') + '+0900';
+        HttpRequest req = new HttpRequest();
+        req.setMethod(method);
+        req.setHeader('Date', formattedDateString);
+        req.setEndpoint('https://map.yahooapis.jp/search/zip/V1/zipCodeSearch?query='+this.PostCode+'&appid='+appid+'&output=json'+'&results=100');
+        req.setHeader('Content-Encoding', 'UTF-8');
 
-        return address;
+        Http http = new Http();
+        HTTPResponse res = http.send(req);
+        system.debug(res.getBody());
+        Map<String, Object> resultJSON = (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
 
+        List<Object> AddressList = (List<Object>)resultJSON.get('Feature');
+        if (AddressList.size() == 0) {
+            //ここでエラー制御
+        } else if (AddressList.size()==1) {
+            Map<String,Object> resultProperty = (Map<String,Object>)((Map<String,Object>)AddressList[0]).get('Property');
+            String result = (String)resultProperty.get('Address');
+            system.debug(result);
+            AddressOptions.add(new SelectOption(result,result));
+        } else {
+            for(Object obj : AddressList){
+                Map<String,Object> resultProperty = (Map<String,Object>)((Map<String,Object>)obj).get('Property');
+                String result = (String)resultProperty.get('Address');
+                AddressOptions.add(new SelectOption(result,result));
+            }
+        }
     }
+
 
     public class CustomDate {
         public String customYear    { get;set; }

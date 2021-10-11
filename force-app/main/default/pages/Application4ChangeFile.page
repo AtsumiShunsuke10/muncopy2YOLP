@@ -1,3 +1,4 @@
+<!--Application4ChangeFile-->
 <apex:page docType="html-5.0" Controller="Application4ListController" action="{!initChangeFilePage}" standardStylesheets="false"
     showHeader="false">
     <title>添付資料再提出画面</title>

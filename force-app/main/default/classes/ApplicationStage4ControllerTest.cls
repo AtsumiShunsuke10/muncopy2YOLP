@@ -281,8 +281,8 @@ public class ApplicationStage4ControllerTest {
         ctrl.toConfirmPage();
         ctrl.toConfirm();
         ApplicationStage4Controller.tempStr = '5.877574320889737';
-        String saveToDocument = ApplicationStage4Controller.saveToDocument('abc.xlsx','abc,def','5.877574320889737','');
-        String deleteDocument = ApplicationStage4Controller.deleteDocument('abc.xlsx','5.877574320889737','');
+        String saveToDocument = ApplicationStage4Controller.saveToDocument('abc.xlsx','abc,def','5.877574320889737');
+        String deleteDocument = ApplicationStage4Controller.deleteDocument('abc.xlsx','5.877574320889737');
         ctrl.toCompletePage();
         ctrl.toInputPage();
         ctrl.deleteFile();

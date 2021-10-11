@@ -30,5 +30,6 @@ public with sharing class filePreviewControllerTest {
 
         filePreviewController PA_Inquiry = new filePreviewController();
         PA_Inquiry.init();
+        filePreviewController.getRelatedFilesByRecordId(acct.id);
     }
 }

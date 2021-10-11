@@ -43,7 +43,7 @@
                     <a class="content1Link" href="#Dai3dan" target="_self">
                         <img class="content1Img" src="{!$Resource.navi1}" />
                     </a>
-                    <apex:outputPanel layout="none" rendered="{!IF(today() >date(2021,09,30) , true , false)}">
+                    <apex:outputPanel layout="none" rendered="{!IF(today() >date(2021,10,31) , true , false)}">
                         <p><span class="red">※ 新規申請の受付は終了しました。</span></p>
                     </apex:outputPanel>
                 </div>

@@ -6,8 +6,7 @@ private class InformationControllerTest {
         Information__c information = new Information__c();
         information.Title__c = 'タイトル';
         information.NoticePeriodStart__c = Date.today();
-        information.NoticePeriodEnd__c = null;
-        information.CCHub__c = 'すべて';
+        information.NoticePeriodEnd__c = Date.today();
         insert information;
     }
 
