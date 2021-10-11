@@ -409,20 +409,16 @@
                                 <div class="w-100 slds-scope row">
                                     <div class="w-30 my-box postcode-padding"><apex:inputField styleClass="form-control" value="{!apply4.Applicant_Postal_Code__c}" id="applicantZip"/></div>
                                     <div>
-                                        <button type="button" id="srchAppAddrBtn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="zipsearch()">
+                                        <button type="button" id="srchAppAddrBtn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('applicantZip', 'applicantAddress')">
                                             <apex:outputText value="住所を検索" />
                                         </button>
                                     </div>
                                 </div>
                             </div>
                             <div class="row infoDiv required autofill">
-                                <apex:selectList id="chooseColor" size="1">
-                                    <apex:selectOptions value="{!zipList}"/>
-                                </apex:selectList>
                                 <apex:outputLabel value="所在地又は住所（番地以降は入力してください。）" for="applicantAddress" />
                                 <apex:inputField styleClass="form-control" value="{!apply4.Applicant_Address__c}" id="applicantAddress" />
                             </div>
-
 
                             <div class="row infoDiv required autofill">
                                 <apex:outputLabel value="法人の名称又は氏名" for="applicantBusinessName" />
@@ -1324,59 +1320,6 @@
         //     }
             
         // }
-
-
-        /*
-        * Copyright (c) 2012, Yahoo Japan Corporation.  All rights reserved.
-        * Copyrights licensed under the MIT License.
-        * See the accompanying LICENSE file for terms. */
-
-        // 郵便番号検索
-        function zipsearch() {
-            // 郵便番号検索
-            var url = 'https://map.yahooapis.jp/search/zip/V1/zipCodeSearch?';
-            var zip_code = $('#zip').val().slice(0, 3) + '-' + $('#zip').val().slice(-4);
-            console.log(zip_code);
-            var param = {
-                appid: 'dj00aiZpPXNjUE9GQWczN3o4aCZzPWNvbnN1bWVyc2VjcmV0Jng9NzU-',
-                output: 'json',
-                query: zip_code,
-                results: 100 // 郵便番号検索結果の件数を指定
-
-            };
-            $.ajax({
-                url: url,
-                data: param,
-                dataType: 'jsonp',
-                success: function (results) {
-                    dispZipList(results);
-                    console.log(results);
-                },
-                error: function () {
-                    // エラー時の処理
-                }
-            });
-        }
-
-        // 郵便番号をリスト表示
-        function dispZipList(ydf) {
-            var zipList = $('#ziplist');
-            zipList.empty();
-
-
-            if (ydf.ResultInfo.Count < 1) {
-                zipList.append('<option value="notFound">該当の郵便番号は見つかりませんでした。</option>');
-
-            } else if (ydf.ResultInfo.Count == 1) {
-
-                zipList.append('<option value="">' + ydf.Feature[0].Property.Address + '</option>');
-
-            } else
-                for (var i = 0; i < ydf.ResultInfo.Count; i++) {
-                    zipList.append('<option value="ydf.Feature[i].Property.Address">' + ydf.Feature[i].Property.Address + '</option>');
-                }
-            }
-        }
         
         function doCheckDate(y, m, d) {
             y = y.substring(0, 4);
