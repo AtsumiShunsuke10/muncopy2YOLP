@@ -400,8 +400,13 @@
                             </div>
                             <div class="w-100 slds-scope row">
                                 <div class="w-30 my-box postcode-padding"><apex:inputField styleClass="form-control" value="{!apply4.Applicant_Postal_Code__c}" id="applicantZip"/></div>
-                                <div>
+                                <!-- <div>
                                     <button type="button" id="srchAppAddrBtn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('applicantZip', 'applicantAddress')">
+                                        <apex:outputText value="住所を検索" />
+                                    </button>
+                                </div> -->
+                                <div>
+                                    <button type="button" id="srchAppAddrBtn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="zipSearch('applicantZip', 'applicantAddress')">
                                         <apex:outputText value="住所を検索" />
                                     </button>
                                 </div>
@@ -2257,6 +2262,48 @@
                 }
             }
 
+        }
+
+        /*
+        * Copyright (c) 2012, Yahoo Japan Corporation.  All rights reserved.
+        * Copyrights licensed under the MIT License.
+        * See the accompanying LICENSE file for terms. */
+        // 郵便番号検索
+        function zipSearch() {
+            var url = 'https://map.yahooapis.jp/search/zip/V1/zipCodeSearch?';
+            var zip_code = $('#j_id0:formId:applicantZip').val().slice(0, 3) + '-' + $('#j_id0:formId:applicantZip').val().slice(-4);
+            console.log(zip_code);
+            var param = {
+                appid: 'dj00aiZpPXMzUUVKZGRlbnY3SSZzPWNvbnN1bWVyc2VjcmV0Jng9YjY-',
+                output: 'json',
+                query: zip_code,
+                results: 100 // 郵便番号検索結果の件数を指定
+            };
+            $.ajax({
+                url: url,
+                data: param,
+                dataType: 'jsonp',
+                success: function (results) {
+                    dispResultAddress(results);
+                    console.log(results);
+                },
+                error: function () {
+                    // エラー時の処理
+                }
+            });
+        }
+
+        //住所検索が重複ヒットした場合は重複部分だけ追加する
+        function dispResultAddress(ydf) {
+            $('#j_id0:formId:applicantAddress').val('');
+
+            if (ydf.ResultInfo.Count == 1 && ydf.Feature[0].Property.Address.startsWith('東京都')) {
+                $('j_id0:formId:applicantAddress').val(ydf.Feature[0].Property.Address);
+            } else if (ydf.ResultInfo.Count > 1 && ydf.Feature[0].Property.Address.startsWith('東京都')){
+                    $('j_id0:formId:applicantAddress').val(ydf.Feature[0].Property.Address);
+            } else {
+                alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
+            }
         }
 
         function doCheckDate(y, m, d) {
