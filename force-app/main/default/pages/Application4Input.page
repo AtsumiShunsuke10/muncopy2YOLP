@@ -617,7 +617,7 @@
                                                 <div class="form-inline col-12 p-0" id="timeSavingBusiness{!stores.StoreIndex__c}">
                                                     <label class="pl-1 pr-2">{!startMonthLbl}</label>
                                                     <apex:selectList style="width: auto;height: 40px;" styleClass="form-control" size="1" id="tsbStartDay" value="{!storeTsbStartDateMap[stores.StoreIndex__c].customDateStr}" onchange="calculateAmount(this)">
-                                                        <apex:selectOptions value="{!SelectTsbDate}"/>
+                                                        <apex:selectOptions value="{!SelectTsbDay}"/>
                                                     </apex:selectList>
                                                     <label style="padding-right: .75rem">　から</label>
                                                     <label for="tsbStartDay" class="pl-1 pr-2">{!endDateLbl}まで（<apex:outputText value="{!stores.Application_Store_Days__c}" id="tsbDaysDiff" />日間）</label>
