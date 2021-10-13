@@ -654,7 +654,7 @@
                                         <div class="w-100 slds-scope row">
                                             <div class="w-30 my-box postcode-padding"><apex:inputField styleClass="form-control" value="{!apply4.Application_Store_1_Postal_Code__c}" id="storePostCode1"/></div>
                                             <div>
-                                                <button type="button" id="srchOffAddr1Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('storePostCode1', 'storeAddress1')">
+                                                <button type="button" id="srchOffAddr1Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="zipSearch('storePostCode1', 'storeAddress1')">
                                                     <apex:outputText value="住所を検索" />
                                                 </button>
                                             </div>
@@ -749,7 +749,7 @@
                                         <div class="w-100 slds-scope row">
                                             <div class="w-30 my-box postcode-padding"><apex:inputField styleClass="form-control" value="{!apply4.Application_Store_2_Postal_Code__c}" id="storePostCode2"/></div>
                                             <div>
-                                                <button type="button" id="srchOffAddr2Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('storePostCode2', 'storeAddress2')">
+                                                <button type="button" id="srchOffAddr2Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="zipSearch('storePostCode2', 'storeAddress2')">
                                                     <apex:outputText value="住所を検索" />
                                                 </button>
                                             </div>
@@ -845,7 +845,7 @@
                                         <div class="w-100 slds-scope row">
                                             <div class="w-30 my-box postcode-padding"><apex:inputField styleClass="form-control" value="{!apply4.Application_Store_3_Postal_Code__c}" id="storePostCode3"/></div>
                                             <div>
-                                                <button type="button" id="srchOffAddr3Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('storePostCode3', 'storeAddress3')">
+                                                <button type="button" id="srchOffAddr3Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="zipSearch('storePostCode3', 'storeAddress3')">
                                                     <apex:outputText value="住所を検索" />
                                                 </button>
                                             </div>
@@ -941,7 +941,7 @@
                                         <div class="w-100 slds-scope row">
                                             <div class="w-30 my-box postcode-padding"><apex:inputField styleClass="form-control" value="{!apply4.Application_Store_4_Postal_Code__c}" id="storePostCode4"/></div>
                                             <div>
-                                                <button type="button" id="srchOffAddr4Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('storePostCode4', 'storeAddress4')">
+                                                <button type="button" id="srchOffAddr4Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="zipSearch('storePostCode4', 'storeAddress4')">
                                                     <apex:outputText value="住所を検索" />
                                                 </button>
                                             </div>
@@ -1038,7 +1038,7 @@
                                         <div class="w-100 slds-scope row">
                                             <div class="w-30 my-box postcode-padding"><apex:inputField styleClass="form-control" value="{!apply4.Application_Store_5_Postal_Code__c}" id="storePostCode5"/></div>
                                             <div>
-                                                <button type="button" id="srchOffAddr5Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('storePostCode5', 'storeAddress5')">
+                                                <button type="button" id="srchOffAddr5Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="zipSearch('storePostCode5', 'storeAddress5')">
                                                     <apex:outputText value="住所を検索" />
                                                 </button>
                                             </div>
@@ -1135,7 +1135,7 @@
                                         <div class="w-100 slds-scope row">
                                             <div class="w-30 my-box postcode-padding"><apex:inputField styleClass="form-control" value="{!apply4.Application_Store_6_Postal_Code__c}" id="storePostCode6"/></div>
                                             <div>
-                                                <button type="button" id="srchOffAddr6Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('storePostCode6', 'storeAddress6')">
+                                                <button type="button" id="srchOffAddr6Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="zipSearch('storePostCode6', 'storeAddress6')">
                                                     <apex:outputText value="住所を検索" />
                                                 </button>
                                             </div>
@@ -1231,7 +1231,7 @@
                                         <div class="w-100 slds-scope row">
                                             <div class="w-30 my-box postcode-padding"><apex:inputField styleClass="form-control" value="{!apply4.Application_Store_7_Postal_Code__c}" id="storePostCode7"/></div>
                                             <div>
-                                                <button type="button" id="srchOffAddr7Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('storePostCode7', 'storeAddress7')">
+                                                <button type="button" id="srchOffAddr7Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="zipSearch('storePostCode7', 'storeAddress7')">
                                                     <apex:outputText value="住所を検索" />
                                                 </button>
                                             </div>
@@ -1327,7 +1327,7 @@
                                         <div class="w-100 slds-scope row">
                                             <div class="w-30 my-box postcode-padding"><apex:inputField styleClass="form-control" value="{!apply4.Application_Store_8_Postal_Code__c}" id="storePostCode8"/></div>
                                             <div>
-                                                <button type="button" id="srchOffAddr8Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('storePostCode8', 'storeAddress8')">
+                                                <button type="button" id="srchOffAddr8Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="zipSearch('storePostCode8', 'storeAddress8')">
                                                     <apex:outputText value="住所を検索" />
                                                 </button>
                                             </div>
@@ -1424,7 +1424,7 @@
                                         <div class="w-100 slds-scope row">
                                             <div class="w-30 my-box postcode-padding"><apex:inputField styleClass="form-control" value="{!apply4.Application_Store_9_Postal_Code__c}" id="storePostCode9"/></div>
                                             <div>
-                                                <button type="button" id="srchOffAddr9Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('storePostCode9', 'storeAddress9')">
+                                                <button type="button" id="srchOffAddr9Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="zipSearch('storePostCode9', 'storeAddress9')">
                                                     <apex:outputText value="住所を検索" />
                                                 </button>
                                             </div>
@@ -1521,7 +1521,7 @@
                                         <div class="w-100 slds-scope row">
                                             <div class="w-30 my-box postcode-padding"><apex:inputField styleClass="form-control" value="{!apply4.Application_Store_10_Postal_Code__c}" id="storePostCode10"/></div>
                                             <div>
-                                                <button type="button" id="srchOffAddr10Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('storePostCode10', 'storeAddress10')">
+                                                <button type="button" id="srchOffAddr10Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="zipSearch('storePostCode10', 'storeAddress10')">
                                                     <apex:outputText value="住所を検索" />
                                                 </button>
                                             </div>
@@ -1616,7 +1616,7 @@
                                         <div class="w-100 slds-scope row">
                                             <div class="w-30 my-box postcode-padding"><apex:inputField styleClass="form-control" value="{!apply4.Application_Store_11_Postal_Code__c}" id="storePostCode11"/></div>
                                             <div>
-                                                <button type="button" id="srchOffAddr11Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="getAddressByPostCode('storePostCode11', 'storeAddress11')">
+                                                <button type="button" id="srchOffAddr11Btn" class="offset-1 btn btn-danger text-white" style="min-width: 50px;font-size: 1rem" onclick="zipSearch('storePostCode11', 'storeAddress11')">
                                                     <apex:outputText value="住所を検索" />
                                                 </button>
                                             </div>
@@ -2290,14 +2290,29 @@
             });
         }
 
-        //住所検索が重複ヒットした場合は重複部分だけ追加する
         function dispResultAddress(ydf, addressFieldId) {
             $('textarea[id$="' + addressFieldId + '"]').val('');
 
             if (ydf.ResultInfo.Count == 1 && ydf.Feature[0].Property.Address.startsWith('東京都')) {
                 $('textarea[id$="' + addressFieldId + '"]').val(ydf.Feature[0].Property.Address);
             } else if (ydf.ResultInfo.Count > 1 && ydf.Feature[0].Property.Address.startsWith('東京都')){
-                $('textarea[id$="' + addressFieldId + '"]').val(ydf.Feature[0].Property.Address);
+                //住所検索が重複ヒットした場合は重複部分だけ表示する
+                var rsltChar = '';
+                for (i = 0; ydf.Feature[0].Property.Address.length; i++) {
+                    var strChar = ydf.Feature[0].Property.Address.slice(0, i+1);
+                    for (x = 1; x < ydf.ResultInfo.Count; x++) {
+                        var address = ydf.Feature[x].Property.Address
+                        if (address.indexOf(strChar) == 0) {
+                            rsltChar = rsltChar +strChar.slice(i, i+1);                        
+                        } else {
+                            break;
+                        }
+                    }
+                    if(rsltChar.includes('東京都')) {
+                   break;
+                    }
+                }
+                $('textarea[id$="' + addressFieldId + '"]').val(rsltChar);
             } else {
                 alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
             }
