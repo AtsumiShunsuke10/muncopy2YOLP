@@ -2264,27 +2264,24 @@
 
         }
 
-        /*
-        * Copyright (c) 2012, Yahoo Japan Corporation.  All rights reserved.
-        * Copyrights licensed under the MIT License.
-        * See the accompanying LICENSE file for terms. */
-        // 郵便番号検索
-        function zipSearch() {
+        // API郵便番号検索
+        function zipSearch(postcodeFieldId, addressFieldId) {
             var url = 'https://map.yahooapis.jp/search/zip/V1/zipCodeSearch?';
-            var zip_code = $('#j_id0:formId:applicantZip').val().slice(0, 3) + '-' + $('#j_id0:formId:applicantZip').val().slice(-4);
+            let zip_code = $('input[id$="' + postcodeFieldId + '"]').val();
+            // var zip_code = $('#j_id0:formId:applicantZip').val().slice(0, 3) + '-' + $('#j_id0:formId:applicantZip').val().slice(-4);
             console.log(zip_code);
             var param = {
                 appid: 'dj00aiZpPXMzUUVKZGRlbnY3SSZzPWNvbnN1bWVyc2VjcmV0Jng9YjY-',
                 output: 'json',
                 query: zip_code,
-                results: 100 // 郵便番号検索結果の件数を指定
+                results: 100 
             };
             $.ajax({
                 url: url,
                 data: param,
                 dataType: 'jsonp',
                 success: function (results) {
-                    dispResultAddress(results);
+                    dispResultAddress(results, addressFieldId);
                     console.log(results);
                 },
                 error: function () {
@@ -2294,13 +2291,13 @@
         }
 
         //住所検索が重複ヒットした場合は重複部分だけ追加する
-        function dispResultAddress(ydf) {
-            $('#j_id0:formId:applicantAddress').val('');
+        function dispResultAddress(ydf, addressFieldId) {
+            $('textarea[id$="' + addressFieldId + '"]').val('');
 
             if (ydf.ResultInfo.Count == 1 && ydf.Feature[0].Property.Address.startsWith('東京都')) {
-                $('j_id0:formId:applicantAddress').val(ydf.Feature[0].Property.Address);
+                $('textarea[id$="' + addressFieldId + '"]').val(ydf.Feature[0].Property.Address);
             } else if (ydf.ResultInfo.Count > 1 && ydf.Feature[0].Property.Address.startsWith('東京都')){
-                    $('j_id0:formId:applicantAddress').val(ydf.Feature[0].Property.Address);
+                $('textarea[id$="' + addressFieldId + '"]').val(ydf.Feature[0].Property.Address);
             } else {
                 alert('{!$Label.Application3PostcodeNotExistsErrMsg}');
             }
